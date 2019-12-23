@@ -58,7 +58,7 @@ function setInitialGameField(width, height) {
         cells[i] = new Array(height);
 
         for (let j = 0; j < height; j++) {
-            if (oldCells && oldCells.length >= i && oldCells[i].length >= j) {
+            if (oldCells && oldCells.length >= i && oldCells[i] && oldCells[i].length >= j) {
                 cells[i][j] = oldCells[i][j]; // take the value of the oldCells if there is a value
             }
             else {
@@ -181,7 +181,7 @@ function refreshClassesOfCellsView() {
     for (let i = 0; i < cells.length; i++) {
         // goes through the rows
         for (let j = 0; j < cells[i].length; j++) {
-            if (!oldCells || oldCells[i][j] !== cells[i][j]) {
+            if (!oldCells || !oldCells[i] || oldCells[i][j] !== cells[i][j]) {
                 let cellDiv = document.getElementById("cell " + "Col: " + i.toString() + " Row: " + j.toString());
 
                 if (cellDiv) {
@@ -244,7 +244,7 @@ function checkGameOfLifeConditions(oldCellArray) {
                     newCells[i][j] = CellStates.Dead;
                 }
             }
-            else if (oldCellArray[i][j] === CellStates.Dead && countNeighbour === 3) {
+            else if ((oldCellArray[i][j] === CellStates.NeverLived || oldCellArray[i][j] === CellStates.Dead) && countNeighbour === 3) {
                 newCells[i][j] = CellStates.Alive;
             }
             else {
@@ -336,6 +336,7 @@ function resizeWindow() {
     document.getElementById("width").value = width.toString();
     document.getElementById("height").value = height.toString();
 
+    oldCells = cells;
     setInitialGameField(width, height);
 }
 
